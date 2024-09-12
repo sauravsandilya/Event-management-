@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .nav {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="password"],
+        .form-group input[type="radio"],
+        .form-group input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .form-group input[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .form-group input[type="submit"]:hover {
+            background-color: #555;
+        }
+        .hidden {
+            display: none;
+        }
+        .admin-only {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="#chart" id="chart-link">Chart</a>
+            <a href="#login" id="login-link">Login</a>
+            <a href="#reports" id="reports-link" class="hidden">Reports</a>
+            <a href="#transactions" id="transactions-link" class="hidden">Transactions</a>
+            <a href="#maintenance" id="maintenance-link" class="admin-only hidden">Maintenance</a>
+            <a href="#logout" id="logout-link" class="hidden">Logout</a>
+        </div>
+        <div id="chart">
+            <h2>Event Management System Flow Chart</h2>
+            <p>This is a simple description of the flow chart for the event management system.</p>
+        </div>
+
+        <div id="login">
+            <h2>Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+        </div>
+
+        <div id="reports" class="hidden">
+            <h2>Reports</h2>
+            <p>Generate and view reports here.</p>
+        </div>
+
+        <div id="transactions" class="hidden">
+            <h2>Transactions</h2>
+            <p>Manage transactions here.</p>
+        </div>
+
+        <div id="maintenance" class="admin-only hidden">
+            <h2>Maintenance</h2>
+            <form id="maintenance-form">
+                <div class="form-group">
+                    <label for="report">Generate Report:</label>
+                    <input type="checkbox" id="report" name="report"> Yes
+                </div>
+                <div class="form-group">
+                    <label for="transaction">Manage Transactions:</label>
+                    <input type="checkbox" id="transaction" name="transaction"> Yes
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+        </div>
+
+        <div id="logout" class="hidden">
+            <h2>Logged Out</h2>
+            <p>You have been logged out.</p>
+        </div>
+    </div>
+
+    <script>
+        // Simulate session and user role
+        let isAdmin = false;
+        let isLoggedIn = false;
+
+        // Show login screen initially
+        document.getElementById('login').style.display = 'block';
+        document.getElementById('reports').style.display = 'none';
+        document.getElementById('transactions').style.display = 'none';
+        document.getElementById('maintenance').style.display = 'none';
+        document.getElementById('logout').style.display = 'none';
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate login validation
+            if (username === 'admin' && password === 'admin') {
+                isAdmin = true;
+                isLoggedIn = true;
+            } else if (username === 'user' && password === 'user') {
+                isAdmin = false;
+                isLoggedIn = true;
+            } else {
+                alert('Invalid username or password');
+                return;
+            }
+
+            updateUI();
+        });
+
+        function updateUI() {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('reports').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('transactions').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('maintenance').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('logout').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('chart-link').style.display = 'block';
+            document.getElementById('login-link').style.display = 'none';
+            document.getElementById('reports-link').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('transactions-link').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('maintenance-link').style.display = isAdmin ? 'block' : 'none';
+            document.getElementById('logout-link').style.display = isLoggedIn ? 'block' : 'none';
+        }
+
+        document.getElementById('logout-link').addEventListener('click', function() {
+            isLoggedIn = false;
+            isAdmin = false;
+            updateUI();
+        });
+
+        document.querySelectorAll('.nav a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.container > div').forEach(function(div) {
+                    div.style.display = 'none';
+                });
+                document.getElementById(targetId).style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
